@@ -1,0 +1,6 @@
+// Approve doctor request
+app.post("/api/patient/approve_access", async (req, res) => {
+  const { patient_regd_no, doctor_id } = req.body;
+  await db.approveAccess(patient_regd_no, doctor_id);
+  res.json({ message: "Access granted" });
+});
