@@ -1,0 +1,33 @@
+import { useState, useEffect } from "react";
+import { View, Text, Button } from "react-native";
+
+const PatientDashboard = () => {
+  const [notifications, setNotifications] = useState([]);
+
+  useEffect(() => {
+    const socket = io("http://your-server.com");
+    socket.on("new_request", (data) => {
+      setNotifications((prev) => [...prev, data]);
+    });
+  }, []);
+
+  const grantAccess = (doctorId) => {
+    fetch("/api/patient/approve_access", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ doctor_id: doctorId }),
+    });
+  };
+
+  return (
+    <View>
+      <Text>Pending Requests</Text>
+      {notifications.map((notif, index) => (
+        <View key={index}>
+          <Text>Dr. {notif.doctor} requested access</Text>
+          <Button title="Approve" onPress={() => grantAccess(notif.doctor)} />
+        </View>
+      ))}
+    </View>
+  );
+};
