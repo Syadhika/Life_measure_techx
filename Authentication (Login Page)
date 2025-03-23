@@ -1,0 +1,10 @@
+// Login API
+app.post("/api/auth/login", async (req, res) => {
+  const { regd_no, role, password } = req.body;
+  const user = await db.getUserByRegdNo(regd_no, role);
+  if (!user || !bcrypt.compareSync(password, user.password)) {
+    return res.status(401).json({ message: "Invalid credentials" });
+  }
+  const token = jwt.sign({ regd_no, role }, SECRET_KEY);
+  res.json({ token, role });
+});
