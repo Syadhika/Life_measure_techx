@@ -1,0 +1,27 @@
+import { useState } from "react";
+import { View, Text, TextInput, Button } from "react-native";
+
+const LoginScreen = ({ navigation }) => {
+  const [regdNo, setRegdNo] = useState("");
+  const [role, setRole] = useState("doctor");
+
+  const handleLogin = async () => {
+    const response = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ regd_no: regdNo, role }),
+    });
+    const data = await response.json();
+    if (data.token) navigation.navigate(role === "doctor" ? "DoctorHome" : "PatientHome");
+  };
+
+  return (
+    <View>
+      <Text>Login</Text>
+      <TextInput placeholder="Regd No" onChangeText={setRegdNo} />
+      <Button title="Login as Doctor" onPress={() => setRole("doctor")} />
+      <Button title="Login as Patient" onPress={() => setRole("patient")} />
+      <Button title="Submit" onPress={handleLogin} />
+    </View>
+  );
+};
