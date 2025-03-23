@@ -1,0 +1,13 @@
+// Add a patient
+app.post("/api/doctor/add_patient", async (req, res) => {
+  const { doctor_id, patient_regd_no } = req.body;
+  await db.addPatient(doctor_id, patient_regd_no);
+  res.json({ message: "Patient added" });
+});
+
+// Request patient access
+app.post("/api/doctor/request_access", async (req, res) => {
+  const { doctor_id, patient_regd_no } = req.body;
+  await db.requestAccess(doctor_id, patient_regd_no);
+  res.json({ message: "Access request sent" });
+});
