@@ -1,0 +1,13 @@
+const io = require("socket.io")(server, {
+  cors: { origin: "*" },
+});
+
+io.on("connection", (socket) => {
+  socket.on("request_access", (data) => {
+    io.to(data.patient_id).emit("new_request", { doctor: data.doctor_id });
+  });
+
+  socket.on("approve_access", (data) => {
+    io.to(data.doctor_id).emit("access_granted", { patient: data.patient_id });
+  });
+});
