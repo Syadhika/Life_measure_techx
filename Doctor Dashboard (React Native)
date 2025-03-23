@@ -1,0 +1,28 @@
+import { useEffect, useState } from "react";
+import { View, Text, Button, FlatList } from "react-native";
+
+const DoctorDashboard = () => {
+  const [patients, setPatients] = useState([]);
+  
+  useEffect(() => {
+    fetch("/api/doctor/patients")
+      .then((res) => res.json())
+      .then((data) => setPatients(data));
+  }, []);
+
+  return (
+    <View>
+      <Text>My Patients</Text>
+      <FlatList
+        data={patients}
+        keyExtractor={(item) => item.regd_no}
+        renderItem={({ item }) => (
+          <View>
+            <Text>{item.name} - {item.age} yrs</Text>
+            <Button title="Request Vitals Access" onPress={() => requestAccess(item.regd_no)} />
+          </View>
+        )}
+      />
+    </View>
+  );
+};
